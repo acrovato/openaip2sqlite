@@ -4,6 +4,8 @@
 import xml.etree.ElementTree as et
 import country as ctr
 import airport as apt
+import airspace as aps
+import navaid as nva
 
 ## Manager
 #  Manage general operations
@@ -23,11 +25,22 @@ class Manager:
             airports = self.__getAirports(country)
             for airport in airports:
                 airport.write()
+            airspaces = self.__getAirspaces(country)
+            for airspace in airspaces:
+                airspace.write()
+            navaids = self.__getNavaids(country)
+            for navaid in navaids:
+                navaid.write()
                 
-    def __checkDB()
+    def __checkDB(self):
         '''Check that database exists and update it if necessary
         '''
-        print 'oops'
+        import os
+        # TODO update instead of delete to create again
+        if os.path.isfile(os.path.join(os.getcwd(), 'world.db')):
+            print 'Removing database:', os.path.join(os.getcwd(), 'world.db')
+            os.remove(os.path.join(os.getcwd(), 'world.db'))
+        print 'Creating database:', os.path.join(os.getcwd(), 'world.db'), '...'
 
     def __getCountries(self):
         '''Find the countries and check that data are present
@@ -42,17 +55,17 @@ class Manager:
                 split = entry.split('_')
                 if split[1] == 'airports':
                     aptcnt +=1
-                elif split[1] == 'airspaces':
+                    countries.append(ctr.Country(split[2], split[3][:-4]))
+                elif split[1] == 'airspace':
                     apscnt +=1
-                elif split[1] == 'navaids':
+                elif split[1] == 'navaid':
                     navcnt +=1
                 else:
                     raise RuntimeError('Unrecognized type of openAIP file: ' + entry + '!\n')
-                countries.append(ctr.Country(split[2], split[3][:-4]))
         if (aptcnt == apscnt and apscnt == navcnt):
             return countries
         else:
-            return countries#raise RuntimeError('Some datafile are missing, counted {0} airports, {1} airspaces, and {2} navaids files!\n'.format(aptcnt, apscnt, navcnt))
+            raise RuntimeError('Some data files are missing, counted {0} airports, {1} airspaces, and {2} navaids files!\n'.format(aptcnt, apscnt, navcnt))
 
     def __getAirports(self, country):
         '''Get airports data from XML
@@ -65,3 +78,27 @@ class Manager:
         for xmlAirport in root[0]:
             airports.append(apt.Airport(xmlAirport))
         return airports
+        
+    def __getAirspaces(self, country):
+        '''Get airspaces data from XML
+        '''
+        import os
+        fxml = os.path.join(self.path, 'openaip_airspace' + '_' + country.name + '_' + country.code + '.aip')
+        tree = et.parse(fxml)
+        root = tree.getroot()
+        airspaces = []
+        for xmlAirspace in root[0]:
+            airspaces.append(aps.Airspace(xmlAirspace))
+        return airspaces
+        
+    def __getNavaids(self, country):
+        '''Get navaids data from XML
+        '''
+        import os
+        fxml = os.path.join(self.path, 'openaip_navaid' + '_' + country.name + '_' + country.code + '.aip')
+        tree = et.parse(fxml)
+        root = tree.getroot()
+        navaids = []
+        for xmlNavaid in root[0]:
+            navaids.append(nva.Navaid(xmlNavaid))
+        return navaids
