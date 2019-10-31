@@ -16,10 +16,18 @@ class Runway:
         self.width = xmlRunway.findtext('WIDTH')
         self.widthUnit = xmlRunway.find('WIDTH').get('UNIT')
         
-    def toSQL(self, fsql):
+    def toSQL(self, cursor, id, aId):
         '''Write to SQLite database
         '''
-        print 'oops'
+        cursor.execute('INSERT INTO Runways VALUES (?,?,?,?,?,?,?,?)',
+            (id,
+            aId,
+            self.name,
+            self.surface,
+            self.length,
+            self.lengthUnit,
+            self.width,
+            self.widthUnit))
         
     def write(self):
         '''Print data to console

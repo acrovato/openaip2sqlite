@@ -2,6 +2,7 @@
 # -*- coding: utf8 -*-
 
 import xml.etree.ElementTree as et
+import math
 
 ## Navaid
 #  Manage navigational aid data
@@ -17,6 +18,9 @@ class Navaid:
         self.longitude = xmlNavaid.find('GEOLOCATION').findtext('LON')
         self.elevation = xmlNavaid.find('GEOLOCATION').findtext('ELEV')
         self.elevationUnit = xmlNavaid.find('GEOLOCATION').find('ELEV').get('UNIT')
+        if self.elevationUnit == 'M': # to feet
+            self.elevation = math.ceil(float(self.elevation) * 3.2808399)
+            self.elevationUnit = 'FT'
         self.frequency = xmlNavaid.find('RADIO').findtext('FREQUENCY')
         self.channel = xmlNavaid.find('RADIO').findtext('CHANNEL')
         self.range = xmlNavaid.find('PARAMS').findtext('RANGE')
@@ -24,10 +28,25 @@ class Navaid:
         self.declination = xmlNavaid.find('PARAMS').findtext('DECLINATION')
         self.trueNorth = xmlNavaid.find('PARAMS').findtext('ALIGNEDTOTRUENORTH')
 
-    def toSQL(self, fsql):
+    def toSQL(self, cursor, id, cId):
         '''Write to SQLite database
         '''
-        print 'oops'
+        cursor.execute('INSERT INTO Navaids VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+            (id,
+            cId,
+            self.name,
+            self.type,
+            self.callsign,
+            self.latitude,
+            self.longitude,
+            self.elevation,
+            self.elevationUnit,
+            self.frequency,
+            self.channel,
+            self.range,
+            self.rangeUnit,
+            self.declination,
+            self.trueNorth))
         
     def write(self):
         '''Print data to console

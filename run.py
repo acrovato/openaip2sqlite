@@ -37,16 +37,20 @@ def printEnd():
     print 'Job done!'
     print '*' * 79
 
-def main():
+def main(verbose):
     import tools.manager as man
     # start
     xmlpath = setup()
     printStart()
     # run
-    manager = man.Manager(xmlpath)
+    manager = man.Manager(xmlpath, verbose)
     manager.run() 
     # end
     printEnd()
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--verbose', help='print parsed data to console',  action="store_true")
+    args = parser.parse_args()
+    main(args.verbose)

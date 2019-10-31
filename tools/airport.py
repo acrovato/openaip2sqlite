@@ -4,6 +4,7 @@
 import xml.etree.ElementTree as et
 import runway as rwy
 import frequency as frq
+import math
 
 ## Airport
 #  Manage airport data
@@ -18,14 +19,25 @@ class Airport:
         self.longitude = xmlAirport.find('GEOLOCATION').findtext('LON')
         self.elevation = xmlAirport.find('GEOLOCATION').findtext('ELEV')
         self.elevationUnit = xmlAirport.find('GEOLOCATION').find('ELEV').get('UNIT')
+        if self.elevationUnit == 'M': # to feet
+            self.elevation = math.ceil(float(self.elevation) * 3.2808399)
+            self.elevationUnit = 'FT'
         self.runways = self.__getRunways(xmlAirport)
         self.frequencies = self.__getFrequencies(xmlAirport)
 
-    def toSQL(self, fsql):
+    def toSQL(self, cursor, id, cId):
         '''Write to SQLite database
         '''
-        print 'oops'
-        
+        cursor.execute('INSERT INTO Airports VALUES (?,?,?,?,?,?,?,?)',
+            (id,
+            cId,
+            self.name,
+            self.icao,
+            self.latitude,
+            self.longitude,
+            self.elevation,
+            self.elevationUnit))
+
     def write(self):
         '''Print data to console
         '''

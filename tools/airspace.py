@@ -22,12 +22,24 @@ class Airspace:
         if self.floorUnit == 'F':
             self.floorUnit = 'FT'
         self.floorRef = xmlAirspace.find('ALTLIMIT_BOTTOM').get('REFERENCE')
-        self.coordinates = self.__getCoordinates(xmlAirspace)
+        self.lng, self.lat = self.__getCoordinates(xmlAirspace)
 
-    def toSQL(self, fsql):
+    def toSQL(self, cursor, id, cId):
         '''Write to SQLite database
         '''
-        print 'oops'
+        cursor.execute('INSERT INTO Airspaces VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
+            (id,
+            cId,
+            self.name,
+            self.category,
+            self.ceiling,
+            self.ceilingUnit,
+            self.ceilingRef,
+            self.floor,
+            self.floorUnit,
+            self.floorRef,
+            self.lat,
+            self.lng))
         
     def write(self):
         '''Print data to console
@@ -37,18 +49,21 @@ class Airspace:
         print 'Name:', self.name
         print 'Category:', self.category
         print 'Vertical limits:', self.ceiling, self.ceilingUnit, self.ceilingRef, '-', self.floor, self.floorUnit, self.floorRef
-        print 'Border coordinates:', self.coordinates
+        print 'Lateral limits (latitude):', self.lat
+        print 'Lateral limits ()longitude):', self.lng
         
     def __getCoordinates(self, xmlAirspace):
         '''Parse airspace coordinates
         '''
-        coordinates = []
+        lng = ''
+        lat = ''
         if xmlAirspace.find('GEOMETRY')[0].tag == 'POLYGON': # TODO implement other type of geometry?
             polydata = xmlAirspace.find('GEOMETRY').findtext('POLYGON').split(',')
             for coord in polydata:
                 x, y = coord.lstrip().split(' ', 1)
-                coordinates.append([x, y])
+                lng += x + ','
+                lat += y + ','
         else:
             raise RuntimeError('Expected to find POLYGON in GEOMETRY object from airspace data, but found', xmlAirspace.find('GEOMETRY')[0].tag, 'instead!\n')
-        return coordinates
+        return lng[:-1], lat[:-1]
         
