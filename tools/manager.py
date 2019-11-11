@@ -75,38 +75,40 @@ class Manager:
               code TEXT)''')
         csr.execute('''CREATE TABLE Airports
              (id INTEGER PRIMARY KEY,
-              country INTEGER,
+              countryId INTEGER,
               name TEXT,
               icao TEXT,
+              type TEXT,
+              country TEXT,
               latitude REAL,
               longitude REAL,
-              elevation REAL,
+              elevation INTEGER,
               elevationUnit TEXT,
-              FOREIGN KEY (country) REFERENCES Countries (id)
+              FOREIGN KEY (countryId) REFERENCES Countries (id)
               )''')
         csr.execute('''CREATE TABLE Runways
              (id INTEGER PRIMARY KEY,
-              airport INTEGER, 
+              airportId INTEGER, 
               name TEXT,
               surface TEXT,
-              length REAL,
+              length INTEGER,
               lengthUnit TEXT,
-              width REAL,
+              width INTEGER,
               widthUnit TEXT,
-              FOREIGN KEY (airport) REFERENCES Airports (id)
+              FOREIGN KEY (airportId) REFERENCES Airports (id)
               )''')
         csr.execute('''CREATE TABLE Frequencies
              (id INTEGER PRIMARY KEY,
-              airport INTEGER,
+              airportId INTEGER,
               callsign TEXT,
               frequency TEXT,
               category TEXT,
               type TEXT,
-              FOREIGN KEY (airport) REFERENCES Airports (id)
+              FOREIGN KEY (airportId) REFERENCES Airports (id)
               )''')
         csr.execute('''CREATE TABLE Airspaces
              (id INTEGER PRIMARY KEY,
-              country INTEGER,
+              countryId INTEGER,
               name TEXT,
               category TEXT,
               ceiling TEXT,
@@ -117,25 +119,23 @@ class Manager:
               floorRef TEXT,
               lat TEXT,
               lng TEXT,
-              FOREIGN KEY (country) REFERENCES Countries (id)
+              FOREIGN KEY (countryId) REFERENCES Countries (id)
               )''')
         csr.execute('''CREATE TABLE Navaids
              (id INTEGER PRIMARY KEY,
-              country INTEGER,
+              countryId INTEGER,
               name TEXT,
               type TEXT,
               callsign TEXT,
               latitude REAL,
               longitude REAL,
-              elevation REAL,
+              elevation INTEGER,
               elevationUnit TEXT,
               frequency TEXT,
               channel TEXT,
               range TEXT,
               rangeUnit TEXT,
-              declination TEXT,
-              trueNorth TEXT,
-              FOREIGN KEY (country) REFERENCES Countries (id)
+              FOREIGN KEY (countryId) REFERENCES Countries (id)
               )''')
         # insert data
         ccnt = 0

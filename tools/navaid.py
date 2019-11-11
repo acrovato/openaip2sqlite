@@ -19,8 +19,10 @@ class Navaid:
         self.elevation = xmlNavaid.find('GEOLOCATION').findtext('ELEV')
         self.elevationUnit = xmlNavaid.find('GEOLOCATION').find('ELEV').get('UNIT')
         if self.elevationUnit == 'M': # to feet
-            self.elevation = math.ceil(float(self.elevation) * 3.2808399)
+            self.elevation = int(math.ceil(float(self.elevation) * 3.2808399))
             self.elevationUnit = 'FT'
+        self.latitude = round(float(self.latitude), 2)
+        self.longitude = round(float(self.longitude), 2)
         self.frequency = xmlNavaid.find('RADIO').findtext('FREQUENCY')
         self.channel = xmlNavaid.find('RADIO').findtext('CHANNEL')
         self.range = xmlNavaid.find('PARAMS').findtext('RANGE')
@@ -31,7 +33,7 @@ class Navaid:
     def toSQL(self, cursor, id, cId):
         '''Write to SQLite database
         '''
-        cursor.execute('INSERT INTO Navaids VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+        cursor.execute('INSERT INTO Navaids VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',
             (id,
             cId,
             self.name,
@@ -44,9 +46,7 @@ class Navaid:
             self.frequency,
             self.channel,
             self.range,
-            self.rangeUnit,
-            self.declination,
-            self.trueNorth))
+            self.rangeUnit))
         
     def write(self):
         '''Print data to console

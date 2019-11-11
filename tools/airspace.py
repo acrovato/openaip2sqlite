@@ -50,7 +50,7 @@ class Airspace:
         print 'Category:', self.category
         print 'Vertical limits:', self.ceiling, self.ceilingUnit, self.ceilingRef, '-', self.floor, self.floorUnit, self.floorRef
         print 'Lateral limits (latitude):', self.lat
-        print 'Lateral limits ()longitude):', self.lng
+        print 'Lateral limits (longitude):', self.lng
         
     def __getCoordinates(self, xmlAirspace):
         '''Parse airspace coordinates

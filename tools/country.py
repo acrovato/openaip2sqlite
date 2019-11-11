@@ -13,8 +13,8 @@ import navaid as nva
 class Country:
     def __init__(self, xmlpath, name, code):
         self.path = xmlpath
-        self.name = name
-        self.code = code
+        self.name = name.capitalize()
+        self.code = code.upper()
         self.airports = self.__getAirports()
         self.airspaces = self.__getAirspaces()
         self.navaids = self.__getNavaids()
@@ -42,7 +42,7 @@ class Country:
         '''
         import os
         print 'Creating airports of', self.name, '...'
-        fxml = os.path.join(self.path, 'openaip_airports' + '_' + self.name + '_' + self.code + '.aip')
+        fxml = os.path.join(self.path, 'openaip_airports' + '_' + self.name.lower() + '_' + self.code.lower() + '.aip')
         tree = et.parse(fxml)
         root = tree.getroot()
         airports = []
@@ -55,7 +55,7 @@ class Country:
         '''
         import os
         print 'Creating airspaces of', self.name, '...'
-        fxml = os.path.join(self.path, 'openaip_airspace' + '_' + self.name + '_' + self.code + '.aip')
+        fxml = os.path.join(self.path, 'openaip_airspace' + '_' + self.name.lower() + '_' + self.code.lower() + '.aip')
         tree = et.parse(fxml)
         root = tree.getroot()
         airspaces = []
@@ -68,7 +68,7 @@ class Country:
         '''
         import os
         print 'Creating navaids of', self.name, '...'
-        fxml = os.path.join(self.path, 'openaip_navaid' + '_' + self.name + '_' + self.code + '.aip')
+        fxml = os.path.join(self.path, 'openaip_navaid' + '_' + self.name.lower() + '_' + self.code.lower() + '.aip')
         tree = et.parse(fxml)
         root = tree.getroot()
         navaids = []
