@@ -25,8 +25,8 @@ def printStart():
     import time, socket
     print '*' * 79
     print '* openaip2sqlite'
-    print '* Adrien Crovato, November 2019'
-    print '* Distributed under GPL license 3.0'
+    print '* Adrien Crovato, June 2020'
+    print '* Distributed under Apache license 2.0'
     print '*' * 79
     print 'time:', time.strftime('%c')
     print 'hostname:', socket.gethostname()
@@ -37,13 +37,13 @@ def printEnd():
     print 'Job done!'
     print '*' * 79
 
-def main(verbose, xmldir):
+def main(verbose, xmldir, airac):
     import tools.manager as man
     # start
     xmlpath = setup(xmldir)
     printStart()
     # run
-    manager = man.Manager(xmlpath, verbose)
+    manager = man.Manager(airac, xmlpath, verbose)
     manager.run() 
     # end
     printEnd()
@@ -53,5 +53,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--verbose', help='print parsed data to console',  action="store_true")
     parser.add_argument('dir', help='xml source directory')
+    parser.add_argument('a', help='AIRAC number')
     args = parser.parse_args()
-    main(args.verbose, args.dir)
+    main(args.verbose, args.dir, args.a)
