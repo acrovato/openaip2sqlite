@@ -3,14 +3,14 @@ Python utilities to convert [openAIP](http://www.openaip.net/) data to SQLite
 
 ## Requirements
 Python 2.7 (with the xml.etree and sqlite3 standard packages).  
-Tested with python 2.7.8 on windows 7 and python 2.7.15 on ubuntu18.04.  
+Tested with python 2.7.18 on windows 7 and python 2.7.15 on ubuntu18.04.  
 
 ## Usage
 Open a terminal/command prompt and run
 ```
-python run.py path/to/source [--verbose]
+python run.py path/to/source airac [--verbose]
 ```
-Where `path/to/source` is the relative path to the directory where the openAIP files are. Currently supported input formats:
+Where `path/to/source` is the relative path to the directory where the openAIP files are, and `airac` is the AIRAC number related to the files. Currently supported input formats:
 - [x] XML
 - [ ] cup
 - [ ] dat
@@ -18,7 +18,10 @@ Where `path/to/source` is the relative path to the directory where the openAIP f
 The resulting database file will be located under `sqlite/world.db`.
 
 ## Doc
-Tables in the database:  
+Tables in the database: 
+- Airac (only has 1 row)
+  - id `PRIMARY KEY INTEGER`
+  - number `INTEGER`
 - Countries
   - id `PRIMARY KEY INTEGER`
   - name `TEXT`

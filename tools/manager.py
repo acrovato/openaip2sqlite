@@ -9,7 +9,8 @@ import country as ctr
 #
 #  Adrien Crovato
 class Manager:
-    def __init__(self, xmlpath, _verbose):
+    def __init__(self, _airac, xmlpath, _verbose):
+        self.airac = _airac
         self.path = xmlpath
         self.verb = _verbose
 
@@ -69,6 +70,9 @@ class Manager:
         conn = sql.connect('world.db')
         # create tables
         csr = conn.cursor()
+        csr.execute('''CREATE TABLE Airac
+             (id INTEGER PRIMARY KEY,
+              number INTEGER)''')
         csr.execute('''CREATE TABLE Countries
              (id INTEGER PRIMARY KEY,
               name TEXT,
@@ -137,6 +141,8 @@ class Manager:
               rangeUnit TEXT,
               FOREIGN KEY (countryId) REFERENCES Countries (id)
               )''')
+        # insert AIRAC number
+        csr.execute('INSERT INTO Airac VALUES (?,?)', (0, self.airac))
         # insert data
         ccnt = 0
         acnt = 0
